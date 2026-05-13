@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PyEgar Docs | ERROREGAS</title>
+    <title>PyEgar Docs | ERROREGAS V0.5</title>
     
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/BluePandaOpn/PyEgar@main/wiki/style.css">
+    
     <style>
         /* Estilo temático de Terminal para ERROREGAS */
         .terminal-box {
@@ -50,9 +50,9 @@
             margin: 15px 0;
         }
 
-        .warning-card {
-            border-left: 4px solid #f59e0b;
-            background: #fffbeb;
+        .node-layer-card {
+            border-left: 4px solid #3b82f6;
+            background: #eff6ff;
             padding: 15px;
             border-radius: 8px;
             margin: 15px 0;
@@ -72,11 +72,10 @@
     </style>
 </head>
 <body>
-
     <div id="loader">
         <div class="loader-wrap">
             <div class="square"></div>
-            <div class="square"></div>
+            <div class="square :focus"></div>
             <div class="square"></div>
         </div>
     </div>
@@ -105,17 +104,17 @@
 
     <main>
         <div class="top-nav">
-            <div style="font-size: 0.8rem; font-weight: 600; color: #6b7280;">Security Layer • Centinela System</div>
+            <div style="font-size: 0.8rem; font-weight: 600; color: #6b7280;">Security Layer • Centinela System V0.5</div>
         </div>
 
         <div class="content-area">
             <div id="content">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <h1>Centinela ERROREGAS <i data-lucide="shield-check" style="color: #4ade80;"></i></h1>
-                    <span class="status-badge"><span class="dot dot-green"></span> SISTEMA ONLINE</span>
+                    <span class="status-badge"><span class="dot dot-green"></span> KERNEL PROTEGIDO</span>
                 </div>
                 
-                <p>ERROREGAS es el módulo de seguridad activa de PyEgar. Su función es interceptar excepciones, validar la integridad de los nodos inyectados y generar reportes legibles antes de que el motor colapse.</p>
+                <p>ERROREGAS es el centinela de seguridad activa de PyEgar. En la <b>V0.5</b>, se encarga de supervisar el arranque del motor y validar que cada inyección de componentes sea segura para evitar el colapso del sistema.</p>
 
                 <div class="terminal-box">
                     <div class="terminal-header">
@@ -124,36 +123,35 @@
                         <div class="dot dot-green"></div>
                     </div>
                     <br>
-                    <div>>>> [ERROREGAS] Inicializando vigilancia...</div>
-                    <div style="color: #94a3b8;">>>> [ERROREGAS] Escaneando decoradores @private...</div>
-                    <div style="color: #fbbf24;">>>> [ERROREGAS] Advertencia: Delta Time desincronizado en Entity_01</div>
-                    <div>>>> [ERROREGAS] Kernel V0.3 protegido.</div>
+                    <div style="color: #3b82f6;">>>> [Kernel V0.5] Compilando módulos | ....</div>
+                    <div style="color: #4ade80;">>>> [Kernel V0.5] SISTEMA LISTO PARA RENDERIZAR.</div>
+                    <div style="color: #94a3b8;">>>> [ERROREGAS] Monitoreando inyección en MemoryGame...</div>
+                    <div style="color: #3b82f6;">>>> [Node2D] Validación exitosa: CollisionShape2D inyectado.</div>
                 </div>
 
                 <section>
-                    <h2><i data-lucide="activity"></i> Monitoreo Activo</h2>
-                    <p>El centinela actúa principalmente en tres frentes del motor:</p>
+                    <h2><i data-lucide="activity"></i> Funciones de Vigilancia V0.5</h2>
                     
-                    <div class="warning-card">
-                        <h4 style="color: #92400e;"><i data-lucide="alert-triangle"></i> Validación de Inyección</h4>
-                        <p>Verifica que los componentes pasados a <code>libs()</code> sean clases válidas de PyEgar. Si intentas inyectar un objeto no soportado, ERROREGAS detiene el proceso antes de corromper la memoria.</p>
+                    <div class="node-layer-card">
+                        <h4 style="color: #1e40af;"><i data-lucide="layers"></i> Validación de Capa Node2D</h4>
+                        <p>Cuando usas <code>libs(self, ...)</code>, ERROREGAS escanea los componentes. Si intentas inyectar una clase que no es compatible con el pipeline de renderizado, el centinela genera un reporte azul y detiene la ejecución para proteger el Kernel.</p>
                     </div>
 
                     <div class="error-card">
-                        <h4 style="color: #991b1b;"><i data-lucide="bug"></i> Intercepción de Atributos</h4>
-                        <p>Vigila el acceso a variables protegidas. Si un usuario intenta modificar una variable de solo lectura (como el bus de datos <code>_eg_state</code>), se dispara un aviso de integridad.</p>
+                        <h4 style="color: #991b1b;"><i data-lucide="unplug"></i> Detección de Recursión Estática</h4>
+                        <p>V0.5 incluye un sistema que detecta si un objeto está intentando llamarse a sí mismo en el <code>on_draw</code> (el error común del motor anterior). ERROREGAS corta el hilo de ejecución antes de agotar la memoria del sistema.</p>
                     </div>
                 </section>
 
                 <section>
-                    <h2><i data-lucide="power"></i> Inicialización</h2>
-                    <p>ERROREGAS es lo primero que se carga al hacer <code>import pyegar</code>. No requiere configuración manual.</p>
-                    <pre><code># Internamente en el Kernel
+                    <h2><i data-lucide="terminal"></i> Secuencia de Arranque</h2>
+                    <p>El centinela se autoinicia durante el <code>import</code> para proteger el motor incluso antes de crear la ventana.</p>
+                    <pre><code># PyEgar Boot Logic
 try:
-    from .Components.ErrorEgar.erroregas import ERROREGAS
-    ERROREGAS.start()
+    from .Components.erroregas import ERROREGAS
+    ERROREGAS.start() # Activa el Kernel V0.5
 except ImportError:
-    print("Fallo crítico: El centinela no responde.")</code></pre>
+    print(">>> [PyEgar Warning] Centinela no encontrado.")</code></pre>
                 </section>
 
                 <section style="text-align: center; margin-top: 50px;">

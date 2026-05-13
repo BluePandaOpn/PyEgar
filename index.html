@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PyEgar Docs | Inicio</title>
@@ -9,6 +10,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/BluePandaOpn/PyEgar@main/wiki/style.css">
+    <style>
+        .architecture-note {
+            background: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+    </style>
 </head>
 <body>
 
@@ -44,67 +54,76 @@
 
     <main>
         <div class="top-nav">
-            <div style="font-size: 0.8rem; font-weight: 600; color: #6b7280;">Kernel V0.3 ALPHA • Documentación Oficial</div>
+            <div style="font-size: 0.8rem; font-weight: 600; color: #6b7280;">Kernel V0.5 ALPHA • Documentación Oficial</div>
             
-            <a href="https://downgit.github.io/#/home?url=https://github.com/BluePandaOpn/PyEgar/tree/main/pyegar" 
+            <a href="https://github.com/BluePandaOpn/PyEgar" 
                 class="btn-publish" 
                 style="text-decoration: none;">
-                Descargar SDK <i data-lucide="download"></i>
+                GitHub Repository <i data-lucide="github"></i>
             </a>
         </div>
 
         <div class="content-area">
             <div id="content">
-                <h1>Bienvenido a PyEgar <span class="badge">V0.3</span></h1>
-                <p>PyEgar es un motor 2D minimalista y potente para Python. Su filosofía se basa en la <b>Inyección de Nodos</b>: en lugar de heredar pesadas jerarquías, "inyectas" las capacidades que necesitas en tus clases.</p>
+                <h1>Bienvenido a PyEgar <span class="badge">V0.5</span></h1>
+                <p>PyEgar es un motor 2D diseñado para la velocidad de desarrollo. En la <b>V0.5</b>, introducimos una comunicación más profunda entre componentes mediante el bus de estado unificado.</p>
+
+                <div class="architecture-note">
+                    <h3><i data-lucide="component"></i> Filosofía de Inyección</h3>
+                    <p>En lugar de usar herencia compleja, PyEgar utiliza <code>libs(self, ...)</code>. Esto inyecta métodos directamente en tu objeto, permitiendo que un "Jugador" tenga capacidades físicas, visuales y de cámara sin jerarquías rígidas.</p>
+                </div>
+
+                
 
                 <section>
-                    <h2><i data-lucide="terminal"></i> ¿Cómo se usa?</h2>
-                    <p>El uso es extremadamente sencillo. Diseñas tu clase e inyectas las <code>libs</code> (librerías) del motor.</p>
+                    <h2><i data-lucide="terminal"></i> Inicio Rápido</h2>
+                    <p>Así luce una entidad básica en la V0.5:</p>
                     
                     <pre><code>from pyegar import *
 
-class MiJuego:
+class Heroe:
     def __init__(self):
-        # Inyectamos movimiento y gráficos en esta clase
-        libs(self, CharacterBody2D, Sprite2D)
+        # Inyectamos componentes inteligentes
+        libs(self, CharacterBody2D, Sprite2D, Camera2D)
         
-        self.load_texture("player.png")
-        self.eg_Speed(250) # Píxeles por segundo
-        self.mov()         # Activa controles automáticos
+        self.sprite.load_texture("hero.png")
+        self.camera.follow(self) # La cámara me sigue a mí
+        self.eg_Speed(300)
 
-# Iniciar el motor
+    def on_update(self):
+        self.mov() # Movimiento con Delta Time incluido
+
+# Iniciar motor
 game = win(init())
 game.start()</code></pre>
                 </section>
 
                 <section>
-                    <h2><i data-lucide="scale"></i> Ventajas y Desventajas</h2>
+                    <h2><i data-lucide="git-branch"></i> Estado del Proyecto</h2>
                     <div class="grid-docs">
                         <div class="card" style="border-top: 4px solid var(--verde-palido);">
-                            <h3 style="color: #2d6a4f;"><i data-lucide="check-circle"></i> Ventajas</h3>
+                            <h3 style="color: #2d6a4f;"><i data-lucide="check-circle"></i> Novedades V0.5</h3>
                             <ul style="padding-left: 20px; font-size: 0.95rem;">
-                                <li><b>Modularidad:</b> Solo consumes RAM por los nodos que inyectas.</li>
-                                <li><b>Delta Time:</b> Movimiento fluido sin importar la potencia de la PC.</li>
-                                <li><b>Seguridad:</b> Centinela ERROREGAS detecta fallos en tiempo real.</li>
+                                <li><b>Delta Time Nativo:</b> Movimiento independiente de los FPS.</li>
+                                <li><b>DrawingComponent:</b> Dibujo vectorial auto-posicionado.</li>
+                                <li><b>Camera Follow:</b> Seguimiento suavizado de objetivos.</li>
                             </ul>
                         </div>
 
                         <div class="card" style="border-top: 4px solid #f87171;">
-                            <h3 style="color: #991b1b;"><i data-lucide="x-circle"></i> Desventajas</h3>
+                            <h3 style="color: #991b1b;"><i data-lucide="alert-circle"></i> Limitaciones</h3>
                             <ul style="padding-left: 20px; font-size: 0.95rem;">
-                                <li><b>Estado Alpha:</b> Funciones sujetas a cambios.</li>
-                                <li><b>Solo 2D:</b> No apto para entornos 3D.</li>
-                                <li><b>Dependencia:</b> Requiere <code>pygame</code>.</li>
+                                <li><b>AABB:</b> Las colisiones no soportan rotación avanzada.</li>
+                                <li><b>Pygame:</b> Sigue siendo la base del backend de renderizado.</li>
                             </ul>
                         </div>
                     </div>
                 </section>
 
                 <section style="text-align: center; margin-top: 60px; padding: 40px; background: #f8f9fa; border-radius: 8px;">
-                    <h3>¿Listo para programar?</h3>
-                    <p>Explora la API completa para ver qué puedes inyectar en tus entidades.</p>
-                    <a href="wiki/nodos.html" class="btn-publish" style="text-decoration: none; display: inline-block;">Ver API de Nodos <i data-lucide="arrow-right"></i></a>
+                    <h3>¿Listo para explorar los componentes?</h3>
+                    <p>Cada nodo inyectable tiene su propia referencia técnica con ejemplos de uso.</p>
+                    <a href="wiki/nodos.html" class="btn-publish" style="text-decoration: none; display: inline-block;">Explorar API de Nodos <i data-lucide="arrow-right"></i></a>
                 </section>
             </div>
         </div>

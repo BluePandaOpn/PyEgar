@@ -3,16 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PyEgar Docs | Pipeline de Render</title>
+    <title>PyEgar Docs | Pipeline de Render V0.5</title>
     
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/BluePandaOpn/PyEgar@main/wiki/style.css">
 </head>
 <body>
-
     <div id="loader">
         <div class="loader-wrap">
             <div class="square"></div>
@@ -45,55 +43,52 @@
 
     <main>
         <div class="top-nav">
-            <div style="font-size: 0.8rem; font-weight: 600; color: #6b7280;">Documentación de Núcleo • Render Pipeline</div>
+            <div style="font-size: 0.8rem; font-weight: 600; color: #6b7280;">Documentación de Núcleo • Render Pipeline V0.5</div>
         </div>
 
         <div class="content-area">
             <div id="content">
                 <h1>Pipeline de Renderizado <i data-lucide="layers"></i></h1>
-                <p>El "Pipeline" es la secuencia de pasos que PyEgar sigue para dibujar un objeto. Este proceso ocurre dentro de la función <code>render(nodo)</code> definida en <code>Wind.py</code>.</p>
+                <p>El Pipeline de la <b>V0.5</b> es un sistema de procesamiento asíncrono que garantiza que cada nodo se dibuje con precisión temporal milimétrica gracias al Kernel central.</p>
 
                 <section>
-                    <h2><i data-lucide="list-ordered"></i> Orden de Ejecución Interna</h2>
-                    <p>Cada vez que llamas a <code>render()</code>, el motor ejecuta los nodos inyectados en este orden estricto para garantizar la estabilidad del sistema:</p>
+                    <h2><i data-lucide="list-ordered"></i> Flujo de Procesamiento V0.5</h2>
+                    <p>Cuando el Kernel ejecuta <code>render()</code>, el objeto atraviesa estas etapas críticas en orden descendente:</p>
                     
-                    <div class="card" style="background: #fdfcfb; border-left: 5px solid var(--azul-pyegar);">
+                    <div class="card" style="background: #fdfcfb; border-left: 5px solid #3b82f6;">
                         <ol class="pipeline-list">
-                            <li><b>Sincronización de Pantalla:</b> El motor vincula el nodo con la superficie actual de Pygame.</li>
-                            <li><b>Aplicación de Gravedad:</b> Si el nodo tiene <code>Gravity2D</code>, se ajusta la velocidad en Y.</li>
-                            <li><b>Actualización Body:</b> Se calcula la nueva posición <code>x, y</code> (CharacterBody2D).</li>
-                            <li><b>Dibujo de Sprite:</b> Se renderiza la textura en las nuevas coordenadas.</li>
-                            <li><b>Actualización UI:</b> Se procesan y dibujan los <code>Labels</code> si existen.</li>
-                            <li><b>Sincronización Hitbox:</b> La caja de colisión se mueve al sitio final del objeto.</li>
-                            <li><b>Custom Draw:</b> Se ejecuta el método <code>on_draw()</code> del usuario.</li>
+                            <li><b>Kernel Sync:</b> Se inyecta el <code>dt</code> (Delta Time) actual en el bus del nodo.</li>
+                            <li><b>Z-Order Sort:</b> El motor decide si el objeto va al fondo o al frente (Capa 0 a 100).</li>
+                            <li><b>Physics Pre-Step:</b> Se resuelven vectores de velocidad y gravedad.</li>
+                            <li><b>Drawing Inyection:</b> Se procesan las formas geométricas de <code>eg_draw</code>.</li>
+                            <li><b>Texture Mapping:</b> El <code>Sprite2D</code> se proyecta considerando el escalado y el flip.</li>
+                            <li><b>Collision Update:</b> La hitbox se bloquea en la posición final tras el renderizado.</li>
+                            <li><b>User Hook:</b> Se dispara el método <code>on_draw()</code> para lógica personalizada.</li>
                         </ol>
                     </div>
                 </section>
 
                 <section>
-                    <h2><i data-lucide="pen-tool"></i> El Método <code>on_draw()</code></h2>
-                    <p>PyEgar permite al desarrollador añadir lógica de dibujo personalizada al final del pipeline. Esto es ideal para dibujar indicadores de depuración o efectos visuales simples.</p>
+                    <h2><i data-lucide="monitor"></i> Gestión de Escenas</h2>
+                    <p>En la V0.5, el Pipeline ya no solo dibuja nodos individuales, sino que gestiona el <b>Scene Buffer</b>. Al llamar a <code>render("NombreEscena")</code>, el motor limpia la memoria anterior y reconstruye el árbol de nodos de la nueva escena.</p>
                     
-                    <pre><code>class Player:
-    def __init__(self):
-        libs(self, CharacterBody2D, Sprite2D)
-
-    def on_draw(self):
-        # Este código se ejecuta DESPUÉS de que el motor dibuje el sprite
-        print(f"Dibujando en: {self.x}, {self.y}")</code></pre>
+                    <div class="card" style="background: #eff6ff; border: 1px solid #bfdbfe;">
+                        <p style="margin: 0; color: #1e40af;">
+                            <i data-lucide="info"></i> <b>Nota:</b> El orden de dibujo se basa en el momento de creación del nodo, a menos que se especifique un <code>z_index</code> manual.
+                        </p>
+                    </div>
                 </section>
 
                 <section>
-                    <h2><i data-lucide="zap"></i> Optimización Automática</h2>
-                    <p>El renderizado de PyEgar implementa técnicas de ahorro de recursos:</p>
+                    <h2><i data-lucide="zap"></i> Mejoras de Rendimiento</h2>
                     <div class="grid-docs">
                         <div class="card">
-                            <h3>Dirty Rects</h3>
-                            <p>El motor solo actualiza las áreas de la pantalla donde ha habido cambios de posición, reduciendo el consumo de GPU.</p>
+                            <h3>Viewport Clipping</h3>
+                            <p>El motor detecta si un nodo está fuera de la cámara y detiene su renderizado gráfico para ahorrar ciclos de CPU.</p>
                         </div>
                         <div class="card">
-                            <h3>Sprite Flip</h3>
-                            <p>La inversión de imagen se calcula en el pipeline basándose en <code>x_direction</code>, eliminando la necesidad de lógica extra por parte del usuario.</p>
+                            <h3>Texture Caching</h3>
+                            <p>Las imágenes cargadas con <code>load_texture</code> se almacenan en un diccionario global; no se vuelven a leer del disco.</p>
                         </div>
                     </div>
                 </section>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PyEgar Docs | Motor Físico</title>
+    <title>PyEgar Docs | Motor Físico V0.5</title>
     
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/BluePandaOpn/PyEgar@main/wiki/style.css">
 </head>
 <body>
-
     <div id="loader">
         <div class="loader-wrap">
             <div class="square"></div>
@@ -44,67 +43,72 @@
 
     <main>
         <div class="top-nav">
-            <div style="font-size: 0.8rem; font-weight: 600; color: #6b7280;">Documentación de Núcleo • Physics System</div>
+            <div style="font-size: 0.8rem; font-weight: 600; color: #6b7280;">Documentación de Núcleo • Physics System V0.5</div>
         </div>
 
         <div class="content-area">
             <div id="content">
                 <h1>Motor Físico <i data-lucide="box"></i></h1>
-                <p>El sistema físico de PyEgar es <b>determinista</b>. Gracias al uso de Delta Time, un objeto se moverá a la misma velocidad real tanto a 30 FPS como a 144 FPS.</p>
+                <p>El sistema físico de PyEgar V0.5 es <b>100% dependiente del tiempo (Delta Time)</b>. Esto significa que las físicas se calculan independientemente de la potencia de procesamiento del usuario.</p>
 
                 <section>
-                    <h2><i data-lucide="trending-up"></i> Lógica de Movimiento</h2>
-                    <p>Cuando inyectas <code>CharacterBody2D</code>, el motor utiliza la lógica interna de <code>move_logic</code> para procesar la posición del nodo en cada frame.</p>
+                    <h2><i data-lucide="trending-up"></i> Cinemática y Movimiento</h2>
+                    <p>Al usar <code>CharacterBody2D</code>, el motor habilita el procesador <code>_internal_body_update</code>. Este sistema sincroniza los vectores de velocidad con el reloj maestro del Kernel.</p>
                     
-                    <div class="card" style="border-left: 5px solid var(--verde-palido);">
-                        <h4>La ecuación del motor:</h4>
-                        <p><code>Nueva Posición = Posición Actual + (Velocidad * Delta Time * Dirección)</code></p>
+                    <div class="card" style="border-left: 5px solid #b7e4c7; background: #f8fafc;">
+                        <h4>Ley de Movimiento V0.5:</h4>
+                        <p><code>distancia = (velocidad * dt)</code></p>
+                        <p><small>Donde <b>dt</b> es el Delta Time calculado por Wind.py</small></p>
                     </div>
-                    
-                    <p>Esto asegura que si defines una velocidad de <code>200</code>, el objeto recorra exactamente <b>200 píxeles en un segundo</b> real.</p>
                 </section>
 
                 <section>
-                    <h2><i data-lucide="arrow-down"></i> Gravedad (Gravity2D)</h2>
-                    <p>La gravedad es un componente opcional que puedes inyectar para juegos de plataformas o simulaciones físicas.</p>
+                    <h2><i data-lucide="arrow-down"></i> Gravedad Inteligente (Gravity2D)</h2>
+                    <p>El componente <code>Gravity2D</code> ha sido blindado contra el <b>RecursionError</b>. Ahora, la gravedad se aplica como una fuerza acumulativa que se reinicia al detectar colisión con suelo.</p>
                     
                     <div class="grid-docs">
                         <div class="card">
-                            <h3>Inyección</h3>
-                            <code>libs(self, Gravity2D)</code>
-                            <p><small>Añade aceleración constante en el eje Y.</small></p>
+                            <h3>Atributos Dinámicos</h3>
+                            <ul>
+                                <li><code>self.gravity_force</code>: Escala de aceleración (Default: 9.8).</li>
+                                <li><code>self.velocity_y</code>: Vector vertical acumulado.</li>
+                                <li><code>self.is_on_floor</code>: Sensor de contacto.</li>
+                            </ul>
                         </div>
                         <div class="card">
-                            <h3>Variables de Control</h3>
-                            <ul>
-                                <li><code>self.gravity_force</code>: Fuerza de atracción.</li>
-                                <li><code>self.is_on_floor</code>: Booleano que detiene la caída.</li>
-                            </ul>
+                            <h3>Uso Correcto</h3>
+                            <p>La gravedad debe ser inyectada mediante <code>libs</code> para que el Kernel la procese automáticamente en el pipeline.</p>
                         </div>
                     </div>
 
-                    <pre><code># Ejemplo práctico de un personaje con gravedad
-class Hero:
+                    <pre><code># Personaje con físicas de nueva generación
+class Player:
     def __init__(self):
-        libs(self, CharacterBody2D, Gravity2D)
-        self.gravity_force = 15.0 # Ajuste de peso
+        # Inyección múltiple compatible con V0.5
+        libs(self, CharacterBody2D, Gravity2D, CollisionShape2D)
+        self.gravity_force = 20.0 # Gravedad personalizada
         
-    def update(self):
-        if self.is_on_floor:
-            self.jump() # Solo salta si toca suelo</code></pre>
+    def on_draw(self):
+        # El Kernel aplica la gravedad aquí automáticamente
+        render(self) </code></pre>
                 </section>
 
                 <section>
-                    <h2><i data-lucide="shield"></i> Resolución de Colisiones</h2>
-                    <p>PyEgar procesa las colisiones en dos pasos mediante el nodo <code>CollisionShape2D</code>:</p>
-                    <ol>
-                        <li><b>Sincronización:</b> La hitbox se mueve a las coordenadas <code>x, y</code> del nodo.</li>
-                        <li><b>Detección:</b> Se comprueba si el Rect de la entidad solapa con otro Rect activo en el bus de datos.</li>
-                    </ol>
+                    <h2><i data-lucide="shield"></i> Resolución de Colisiones (AABB)</h2>
+                    <p>PyEgar utiliza un sistema de <b>Axis-Aligned Bounding Boxes</b>. En la V0.5, el método <code>is_hover()</code> ha sido optimizado para detectar el puntero del mouse incluso si la cámara se está moviendo.</p>
+                    
+                    <div class="card">
+                        <h4>Pipeline de Colisión:</h4>
+                        <ol>
+                            <li><b>Update:</b> Se recalculan los límites del Rect base.</li>
+                            <li><b>Sync:</b> Se traslada la colisión según el scroll de la Cámara.</li>
+                            <li><b>Check:</b> Se verifica solapamiento con el bus de datos global.</li>
+                        </ol>
+                    </div>
 
-                    <div class="card" style="background: #fff5f5; border: 1px solid #feb2b2;">
-                        <h4 style="color: #c53030;"><i data-lucide="alert-triangle"></i> Nota Técnica</h4>
-                        <p style="font-size: 0.9rem;">Las colisiones en V0.3 son de tipo <b>AABB</b> (Axis-Aligned Bounding Box). No soportan rotación de colisión aún.</p>
+                    <div class="card" style="background: #fff5f5; border: 1px solid #feb2b2; margin-top: 20px;">
+                        <h4 style="color: #c53030;"><i data-lucide="mouse-pointer-2"></i> Interacción de Mouse</h4>
+                        <p style="font-size: 0.9rem;">Para detectar clics en objetos físicos (como en el <b>Juego de Memoria</b>), usa siempre <code>self.eg_collision.is_hover()</code> dentro del <code>on_draw</code> de tu escena.</p>
                     </div>
                 </section>
 

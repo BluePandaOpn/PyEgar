@@ -1,60 +1,61 @@
+# pyegar/Node/Windows/win/render.py (o la ruta donde lo tengas)
 import pygame
 
 def draw_node(screen, node, camera=None):
     """
-    Procesa el dibujado de un nodo en pantalla.
-    Maneja texturas, transformaciones y desplazamiento de cámara.
+    Procesador universal de renderizado.
+    Maneja el dibujo de texturas y formas geométricas con soporte de cámara.
     """
     
-    # 1. Verificar si el nodo tiene una textura válida para dibujar
-    if not hasattr(node, 'texture') or node.texture is None:
-        return
-
-    # 2. Obtener la posición base
+    # 1. Obtener posición base (Mundo)
     render_x, render_y = node.x, node.y
 
-    # 3. Aplicar el desplazamiento de la cámara (si existe)
+    # 2. Aplicar desplazamiento de cámara (Si existe)
     if camera:
-        # Usamos el método apply del nodo Camera2D para transformar coordenadas mundo -> pantalla
         render_x, render_y = camera.apply(render_x, render_y)
 
-    # 4. Manejo del Pivote (Centrado del Sprite)
-    # Por defecto, PyEgar dibuja desde el centro para facilitar rotaciones y colisiones
-    rect = node.texture.get_rect()
-    
-    # Si el nodo tiene dimensiones personalizadas, escalamos la imagen
-    if hasattr(node, 'width') and hasattr(node, 'height'):
-        if node.width != rect.width or node.height != rect.height:
-            # Nota: El escalado en cada frame es costoso. 
-            # Es mejor que Sprite2D cachee la textura escalada.
-            temp_texture = pygame.transform.scale(node.texture, (int(node.width), int(node.height)))
-            rect = temp_texture.get_rect()
+    # 3. MODO DIBUJO GEOMÉTRICO (Prioridad en V0.5)
+    # Si el nodo tiene el componente 'Draw' activo
+    if hasattr(node, 'eg_draw'):
+        node.eg_draw.x, node.eg_draw.y = render_x, render_y
+        # El componente Draw ya tiene su propia lógica de dibujo sobre la pantalla
+
+    # 4. MODO TEXTURA / SPRITE
+    # Solo se ejecuta si el nodo tiene una textura cargada
+    if hasattr(node, 'texture') and node.texture is not None:
+        rect = node.texture.get_rect()
+        
+        # Manejo de dimensiones personalizadas
+        if hasattr(node, 'width') and hasattr(node, 'height'):
+            if node.width != rect.width or node.height != rect.height:
+                temp_texture = pygame.transform.scale(node.texture, (int(node.width), int(node.height)))
+                rect = temp_texture.get_rect()
+            else:
+                temp_texture = node.texture
         else:
             temp_texture = node.texture
-    else:
-        temp_texture = node.texture
 
-    # Centramos el rect en las coordenadas de renderizado
-    rect.center = (int(render_x), int(render_y))
+        # Posicionamiento centrado
+        rect.center = (int(render_x), int(render_y))
 
-    # 5. Manejo de Rotación (Opcional si el nodo tiene atributo 'rotation')
-    if hasattr(node, 'rotation') and node.rotation != 0:
-        rotated_texture = pygame.transform.rotate(temp_texture, node.rotation)
-        new_rect = rotated_texture.get_rect(center=rect.center)
-        screen.blit(rotated_texture, new_rect)
-    else:
-        # Dibujo estándar
+        # Dibujo final del Sprite
         screen.blit(temp_texture, rect)
 
-def is_on_screen(node, camera, screen_width, screen_height):
+    # 5. DIBUJO DE HITBOX (Depuración)
+    # Si el motor tiene activado el modo debug, dibujamos el borde de la colisión
+    if hasattr(node, 'eg_collision') and node.eg_collision.color:
+        node.eg_collision._update_collision(render_x, render_y)
+        node.eg_collision._draw_collision(screen)
+
+def is_on_screen(node, screen_width, screen_height, camera=None):
     """
-    Culling: Verifica si un objeto está dentro de la visión de la cámara.
-    Si devuelve False, el motor puede saltarse el renderizado para ganar FPS.
+    Culling: Verifica si un objeto es visible para no gastar recursos.
     """
-    if not camera: return True
+    # Si no hay cámara, asumimos límites de la pantalla
+    offset_x = camera.offset_x if camera else 0
+    offset_y = camera.offset_y if camera else 0
     
-    view_x, view_y = camera.apply(node.x, node.y)
-    margin = 100 # Margen de seguridad
-    
-    return (view_x > -margin and view_x < screen_width + margin and
-            view_y > -margin and view_y < screen_height + margin)
+    if (node.x - offset_x > screen_width + 100 or node.x - offset_x < -100 or
+        node.y - offset_y > screen_height + 100 or node.y - offset_y < -100):
+        return False
+    return True

@@ -3,16 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PyEgar Docs | API de Nodos</title>
+    <title>PyEgar Docs | API de Nodos V0.5</title>
     
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/BluePandaOpn/PyEgar@main/wiki/style.css">
+    <style>
+        /* Estilo para que los títulos parezcan enlaces sutiles */
+        .card-header-node h2 a {
+            color: inherit;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color 0.2s;
+        }
+        .card-header-node h2 a:hover {
+            color: var(--verde-fuerte);
+        }
+    </style>
 </head>
 <body>
-
     <div id="loader">
         <div class="loader-wrap">
             <div class="square"></div>
@@ -45,106 +57,57 @@
 
     <main>
         <div class="top-nav">
-            <div style="font-size: 0.8rem; font-weight: 600; color: #6b7280;">Referencia Técnica • API de Nodos V0.3</div>
+            <div style="font-size: 0.8rem; font-weight: 600; color: #6b7280;">Referencia Técnica • API de Nodos V0.5</div>
         </div>
 
         <div class="content-area">
             <div id="content">
                 <h1>API de Nodos <i data-lucide="component" style="vertical-align: middle;"></i></h1>
-                <p>Aquí encontrarás la lista de componentes inyectables que componen el motor. Cada nodo añade atributos y métodos únicos al objeto mediante la función <code>libs()</code>.</p>
+                <p>En la <b>V0.5</b>, los nodos son componentes inteligentes. Haz clic en los títulos para ver la documentación detallada de cada uno.</p>
 
                 <section id="characterbody">
                     <div class="card-header-node">
-                        <h2><i data-lucide="user"></i> CharacterBody2D</h2>
-                        <span class="tag-meta">Física / Movimiento</span>
+                        <h2><a href="characterbody.html"><i data-lucide="user"></i> CharacterBody2D</a></h2>
+                        <span class="tag-meta">Core / Cinemática</span>
                     </div>
-                    <p>Es el nodo base para cualquier entidad que requiera coordenadas (x, y) y movimiento controlado por velocidad.</p>
-                    
-                    <h3>Métodos Públicos</h3>
-                    <ul>
-                        <li><code>eg_Speed(float)</code>: Establece la velocidad en píxeles/segundo.</li>
-                        <li><code>mov()</code>: Habilita el listener de teclado (WASD/Flechas).</li>
-                    </ul>
-
-                    <div class="code-example">
-                        <h4>Ejemplo de uso práctico:</h4>
-                        <pre><code>class Player:
-    def __init__(self):
-        libs(self, CharacterBody2D)
-        self.eg_Speed(200) # px/s
-        self.mov()         # Movimiento automático</code></pre>
-                    </div>
+                    <p>Nodo base para entidades con movimiento. Soporta <b>Delta Time</b> nativo.</p>
                 </section>
 
                 <section id="sprite">
                     <div class="card-header-node">
-                        <h2><i data-lucide="image"></i> Sprite2D</h2>
-                        <span class="tag-meta">Gráficos</span>
+                        <h2><a href="Sprite2D.html"><i data-lucide="image"></i> Sprite2D</a></h2>
+                        <span class="tag-meta">Gráficos / Texturas</span>
                     </div>
-                    <p>Gestiona la visualización de imágenes y el auto-volteo (flip) según la dirección de movimiento.</p>
-                    
-                    <h3>Métodos Públicos</h3>
-                    <ul>
-                        <li><code>load_texture(path, w, h)</code>: Carga un archivo PNG/JPG.</li>
-                        <li><code>flip(bool)</code>: Voltea la imagen manualmente en el eje X.</li>
-                    </ul>
+                    <p>Gestiona la visualización de imágenes y el auto-volteo según dirección.</p>
+                </section>
 
-                    <div class="code-example">
-                        <h4>Ejemplo con CharacterBody:</h4>
-                        <pre><code>class Enemigo:
-    def __init__(self):
-        libs(self, CharacterBody2D, Sprite2D)
-        self.load_texture("assets/enemy.png", 64, 64)
-        # Nota: El sprite mirará a la izquierda automáticamente 
-        # si x_direction es negativa.</code></pre>
+                <section id="egdraw">
+                    <div class="card-header-node">
+                        <h2><a href="draw.html"><i data-lucide="pen-tool"></i> DrawingComponent</a></h2>
+                        <span class="tag-meta">Gráficos / Vectorial</span>
                     </div>
+                    <p>Permite dibujar formas geométricas (rect, circle) que siguen al nodo automáticamente.</p>
                 </section>
 
                 <section id="collision">
                     <div class="card-header-node">
-                        <h2><i data-lucide="box"></i> CollisionShape2D</h2>
-                        <span class="tag-meta">Interacción</span>
+                        <h2><a href="CollisionShape2D.html"><i data-lucide="box"></i> CollisionShape2D</a></h2>
+                        <span class="tag-meta">Física / Eventos</span>
                     </div>
-                    <p>Añade una caja de colisión (Hitbox) y permite interactuar con el mouse.</p>
-                    
-                    <h3>Métodos Públicos</h3>
-                    <ul>
-                        <li><code>rect(w, h, color)</code>: Define el tamaño y color del borde.</li>
-                        <li><code>set_drag(True)</code>: Permite arrastrar el objeto con el ratón.</li>
-                        <li><code>is_colliding_with(otro)</code>: Verifica contacto con otra hitbox.</li>
-                    </ul>
-
-                    <div class="code-example">
-                        <h4>Detección de colisiones:</h4>
-                        <pre><code>def update(self):
-    if self.eg_collision.is_colliding_with(moneda.eg_collision):
-        print("¡Moneda recogida!")</code></pre>
-                    </div>
+                    <p>Gestiona hitboxes y detección de mouse con soporte para scroll de cámara.</p>
                 </section>
 
-                <section id="label">
+                <section id="camera">
                     <div class="card-header-node">
-                        <h2><i data-lucide="type"></i> Label</h2>
-                        <span class="tag-meta">UI / Interfaz</span>
+                        <h2><a href="camera.html"><i data-lucide="video"></i> Camera2D</a></h2>
+                        <span class="tag-meta">Viewport</span>
                     </div>
-                    <p>Sistema de renderizado de texto optimizado. Utiliza un <b>caché de fuentes</b> compartido para no consumir CPU extra.</p>
-                    
-                    <h3>Métodos Públicos</h3>
-                    <ul>
-                        <li><code>printf(text, size, color, x, y, font)</code>: Dibuja texto en pantalla.</li>
-                    </ul>
-
-                    <div class="code-example">
-                        <h4>Interfaz de usuario:</h4>
-                        <pre><code>class HUD:
-    def __init__(self):
-        libs(self, Label)
-        
-    def on_draw(self):
-        self.printf(f"FPS: {engine.get_fps()}", size=20, color=GOLD, x=10, y=10)</code></pre>
-                    </div>
+                    <p>Controla el desplazamiento de la vista y el seguimiento suavizado de objetivos.</p>
                 </section>
 
+                <section style="text-align: center; margin-top: 50px;">
+                    <a href="wind.html" class="btn-publish" style="text-decoration: none;">Siguiente: Ventana y Kernel <i data-lucide="monitor"></i></a>
+                </section>
             </div>
         </div>
     </main>
@@ -158,7 +121,7 @@
                     loader.style.opacity = '0';
                     setTimeout(() => loader.remove(), 600);
                 }
-            }, 1500); 
+            }, 1000); 
         };
     </script>
 </body>
