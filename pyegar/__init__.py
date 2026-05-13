@@ -1,4 +1,3 @@
-# Karner PyEgar
 # V0.5
 # pyegar/__init__.py
 import pygame
