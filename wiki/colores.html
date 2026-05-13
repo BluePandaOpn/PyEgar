@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyEgar Docs | Paleta de Colores</title>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/BluePandaOpn/PyEgar@main/wiki/style.css">
+    <style>
+        /* Estilos específicos para las tarjetas de colores */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .color-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+            cursor: pointer;
+        }
+
+        .color-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+        }
+
+        .swatch-large {
+            height: 140px;
+            width: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+            padding: 10px;
+        }
+
+        .copy-hint {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            border-radius: 5px;
+            padding: 4px;
+            color: white;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .color-card:hover .copy-hint {
+            opacity: 1;
+        }
+
+        .color-info {
+            padding: 15px;
+            background: white;
+        }
+
+        .color-info b {
+            display: block;
+            font-size: 1.1rem;
+            color: #1f2937;
+            margin-bottom: 5px;
+        }
+
+        .color-info code {
+            font-size: 0.8rem;
+            color: #6b7280;
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .color-grid-mini {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+        }
+
+        .mini-card {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            gap: 12px;
+        }
+
+        .swatch-mini {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <div class="loader-wrap">
+            <div class="square"></div>
+            <div class="square"></div>
+            <div class="square"></div>
+        </div>
+    </div>
+
+    <nav>
+        <div class="logo-box">
+            <img src="https://raw.githubusercontent.com/BluePandaOpn/PyEgar/main/Assets/Logo/logo.png" alt="Logo PyEgar" class="logo-img">
+            <div class="engine-name">PYEGAR HUB</div>
+        </div>
+
+        <div class="nav-label">Core Engine</div>
+        <a href="../index.html" class="nav-link"><i data-lucide="home"></i> Guía de Inicio</a>
+        <a href="nodos.html" class="nav-link"><i data-lucide="code-2"></i> API de Nodos</a>
+        <a href="wind.html" class="nav-link"><i data-lucide="monitor"></i> Ventana (Wind.py)</a>
+        
+        <div class="nav-label">Física y Gráficos</div>
+        <a href="physics.html" class="nav-link"><i data-lucide="zap"></i> Motor Físico</a>
+        <a href="render.html" class="nav-link"><i data-lucide="cpu"></i> Pipeline de Render</a>
+        <a href="colores.html" class="nav-link active"><i data-lucide="palette"></i> Recursos de Color</a>
+        
+        <div class="nav-label">Sistema y Seguridad</div>
+        <a href="erroregas.html" class="nav-link" style="color: #f87171;"><i data-lucide="shield-alert"></i> ERROREGAS</a>
+        <a href="decorators.html" class="nav-link"><i data-lucide="lock"></i> Decoradores</a>
+        <a href="config.html" class="nav-link"><i data-lucide="settings"></i> Configuración</a>
+    </nav>
+
+    <main>
+        <div class="top-nav">
+            <div style="font-size: 0.8rem; font-weight: 600; color: #6b7280;">Diseño • PyEgar Color Scheme</div>
+        </div>
+
+        <div class="content-area">
+            <div id="content">
+                <h1>Paleta de Colores <i data-lucide="palette"></i></h1>
+                <p>Usa estas constantes globales para dar identidad visual a tus juegos. PyEgar utiliza un esquema de colores saturados pero equilibrados para interfaces limpias.</p>
+
+                <section>
+                    <h2><i data-lucide="star"></i> Colores de Identidad</h2>
+                    <div class="color-grid">
+                        <div class="color-card">
+                            <div class="swatch-large" style="background: rgb(200, 50, 50);"><i data-lucide="copy" class="copy-hint"></i></div>
+                            <div class="color-info"><b>RED</b> <code>(200, 50, 50)</code></div>
+                        </div>
+                        <div class="color-card">
+                            <div class="swatch-large" style="background: rgb(50, 200, 50);"><i data-lucide="copy" class="copy-hint"></i></div>
+                            <div class="color-info"><b>GREEN</b> <code>(50, 200, 50)</code></div>
+                        </div>
+                        <div class="color-card">
+                            <div class="swatch-large" style="background: rgb(50, 50, 200);"><i data-lucide="copy" class="copy-hint"></i></div>
+                            <div class="color-info"><b>BLUE</b> <code>(50, 50, 200)</code></div>
+                        </div>
+                        <div class="color-card">
+                            <div class="swatch-large" style="background: rgb(212, 175, 55);"><i data-lucide="copy" class="copy-hint"></i></div>
+                            <div class="color-info"><b>GOLD</b> <code>(212, 175, 55)</code></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2><i data-lucide="sparkles"></i> Tonos Especiales</h2>
+                    <div class="color-grid">
+                        <div class="color-card">
+                            <div class="swatch-large" style="background: rgb(135, 206, 235);"><i data-lucide="copy" class="copy-hint"></i></div>
+                            <div class="color-info"><b>SKY_BLUE</b> <code>(135, 206, 235)</code></div>
+                        </div>
+                        <div class="color-card">
+                            <div class="swatch-large" style="background: rgb(200, 120, 50);"><i data-lucide="copy" class="copy-hint"></i></div>
+                            <div class="color-info"><b>ORANGE</b> <code>(200, 120, 50)</code></div>
+                        </div>
+                        <div class="color-card">
+                            <div class="swatch-large" style="background: rgb(34, 139, 34);"><i data-lucide="copy" class="copy-hint"></i></div>
+                            <div class="color-info"><b>FOREST</b> <code>(34, 139, 34)</code></div>
+                        </div>
+                        <div class="color-card">
+                            <div class="swatch-large" style="background: rgb(200, 50, 150);"><i data-lucide="copy" class="copy-hint"></i></div>
+                            <div class="color-info"><b>PINK</b> <code>(200, 50, 150)</code></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2><i data-lucide="layers-2"></i> Escala de Neutros</h2>
+                    <div class="color-grid-mini">
+                        <div class="mini-card">
+                            <div class="swatch-mini" style="background: rgb(240, 240, 240); border: 1px solid #ddd;"></div>
+                            <b>WHITE</b>
+                        </div>
+                        <div class="mini-card">
+                            <div class="swatch-mini" style="background: rgb(100, 100, 100);"></div>
+                            <b>GRAY</b>
+                        </div>
+                        <div class="mini-card">
+                            <div class="swatch-mini" style="background: rgb(45, 45, 45);"></div>
+                            <b>DARK_GRAY</b>
+                        </div>
+                        <div class="mini-card">
+                            <div class="swatch-mini" style="background: rgb(20, 20, 20);"></div>
+                            <b>BLACK</b>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="text-align: center; margin-top: 60px;">
+                    <a href="erroregas.html" class="btn-publish" style="text-decoration: none; background: #f87171;">Siguiente: Centinela ERROREGAS <i data-lucide="shield-alert"></i></a>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+        window.onload = () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                if(loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.remove(), 600);
+                }
+            }, 1000); 
+        };
+    </script>
+</body>
+</html>

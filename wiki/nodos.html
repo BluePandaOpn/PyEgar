@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyEgar Docs | API de Nodos</title>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/BluePandaOpn/PyEgar@main/wiki/style.css">
+</head>
+<body>
+
+    <div id="loader">
+        <div class="loader-wrap">
+            <div class="square"></div>
+            <div class="square"></div>
+            <div class="square"></div>
+        </div>
+    </div>
+
+    <nav>
+        <div class="logo-box">
+            <img src="https://raw.githubusercontent.com/BluePandaOpn/PyEgar/main/Assets/Logo/logo.png" alt="Logo PyEgar" class="logo-img">
+            <div class="engine-name">PYEGAR HUB</div>
+        </div>
+
+        <div class="nav-label">Core Engine</div>
+        <a href="../index.html" class="nav-link"><i data-lucide="home"></i> Guía de Inicio</a>
+        <a href="nodos.html" class="nav-link active"><i data-lucide="code-2"></i> API de Nodos</a>
+        <a href="wind.html" class="nav-link"><i data-lucide="monitor"></i> Ventana (Wind.py)</a>
+        
+        <div class="nav-label">Física y Gráficos</div>
+        <a href="physics.html" class="nav-link"><i data-lucide="zap"></i> Motor Físico</a>
+        <a href="render.html" class="nav-link"><i data-lucide="cpu"></i> Pipeline de Render</a>
+        <a href="colores.html" class="nav-link"><i data-lucide="palette"></i> Recursos de Color</a>
+        
+        <div class="nav-label">Sistema y Seguridad</div>
+        <a href="erroregas.html" class="nav-link" style="color: #f87171;"><i data-lucide="shield-alert"></i> ERROREGAS</a>
+        <a href="decorators.html" class="nav-link"><i data-lucide="lock"></i> Decoradores</a>
+        <a href="config.html" class="nav-link"><i data-lucide="settings"></i> Configuración</a>
+    </nav>
+
+    <main>
+        <div class="top-nav">
+            <div style="font-size: 0.8rem; font-weight: 600; color: #6b7280;">Referencia Técnica • API de Nodos V0.3</div>
+        </div>
+
+        <div class="content-area">
+            <div id="content">
+                <h1>API de Nodos <i data-lucide="component" style="vertical-align: middle;"></i></h1>
+                <p>Aquí encontrarás la lista de componentes inyectables que componen el motor. Cada nodo añade atributos y métodos únicos al objeto mediante la función <code>libs()</code>.</p>
+
+                <section id="characterbody">
+                    <div class="card-header-node">
+                        <h2><i data-lucide="user"></i> CharacterBody2D</h2>
+                        <span class="tag-meta">Física / Movimiento</span>
+                    </div>
+                    <p>Es el nodo base para cualquier entidad que requiera coordenadas (x, y) y movimiento controlado por velocidad.</p>
+                    
+                    <h3>Métodos Públicos</h3>
+                    <ul>
+                        <li><code>eg_Speed(float)</code>: Establece la velocidad en píxeles/segundo.</li>
+                        <li><code>mov()</code>: Habilita el listener de teclado (WASD/Flechas).</li>
+                    </ul>
+
+                    <div class="code-example">
+                        <h4>Ejemplo de uso práctico:</h4>
+                        <pre><code>class Player:
+    def __init__(self):
+        libs(self, CharacterBody2D)
+        self.eg_Speed(200) # px/s
+        self.mov()         # Movimiento automático</code></pre>
+                    </div>
+                </section>
+
+                <section id="sprite">
+                    <div class="card-header-node">
+                        <h2><i data-lucide="image"></i> Sprite2D</h2>
+                        <span class="tag-meta">Gráficos</span>
+                    </div>
+                    <p>Gestiona la visualización de imágenes y el auto-volteo (flip) según la dirección de movimiento.</p>
+                    
+                    <h3>Métodos Públicos</h3>
+                    <ul>
+                        <li><code>load_texture(path, w, h)</code>: Carga un archivo PNG/JPG.</li>
+                        <li><code>flip(bool)</code>: Voltea la imagen manualmente en el eje X.</li>
+                    </ul>
+
+                    <div class="code-example">
+                        <h4>Ejemplo con CharacterBody:</h4>
+                        <pre><code>class Enemigo:
+    def __init__(self):
+        libs(self, CharacterBody2D, Sprite2D)
+        self.load_texture("assets/enemy.png", 64, 64)
+        # Nota: El sprite mirará a la izquierda automáticamente 
+        # si x_direction es negativa.</code></pre>
+                    </div>
+                </section>
+
+                <section id="collision">
+                    <div class="card-header-node">
+                        <h2><i data-lucide="box"></i> CollisionShape2D</h2>
+                        <span class="tag-meta">Interacción</span>
+                    </div>
+                    <p>Añade una caja de colisión (Hitbox) y permite interactuar con el mouse.</p>
+                    
+                    <h3>Métodos Públicos</h3>
+                    <ul>
+                        <li><code>rect(w, h, color)</code>: Define el tamaño y color del borde.</li>
+                        <li><code>set_drag(True)</code>: Permite arrastrar el objeto con el ratón.</li>
+                        <li><code>is_colliding_with(otro)</code>: Verifica contacto con otra hitbox.</li>
+                    </ul>
+
+                    <div class="code-example">
+                        <h4>Detección de colisiones:</h4>
+                        <pre><code>def update(self):
+    if self.eg_collision.is_colliding_with(moneda.eg_collision):
+        print("¡Moneda recogida!")</code></pre>
+                    </div>
+                </section>
+
+                <section id="label">
+                    <div class="card-header-node">
+                        <h2><i data-lucide="type"></i> Label</h2>
+                        <span class="tag-meta">UI / Interfaz</span>
+                    </div>
+                    <p>Sistema de renderizado de texto optimizado. Utiliza un <b>caché de fuentes</b> compartido para no consumir CPU extra.</p>
+                    
+                    <h3>Métodos Públicos</h3>
+                    <ul>
+                        <li><code>printf(text, size, color, x, y, font)</code>: Dibuja texto en pantalla.</li>
+                    </ul>
+
+                    <div class="code-example">
+                        <h4>Interfaz de usuario:</h4>
+                        <pre><code>class HUD:
+    def __init__(self):
+        libs(self, Label)
+        
+    def on_draw(self):
+        self.printf(f"FPS: {engine.get_fps()}", size=20, color=GOLD, x=10, y=10)</code></pre>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+        window.onload = () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                if(loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.remove(), 600);
+                }
+            }, 1500); 
+        };
+    </script>
+</body>
+</html>

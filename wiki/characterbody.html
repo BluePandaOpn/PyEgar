@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyEgar Docs | CharacterBody2D</title>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/BluePandaOpn/PyEgar@main/wiki/style.css">
+
+    <style>
+        body { display: block; overflow-y: auto; }
+        main { margin-left: 0 !important; width: 100%; min-height: 100vh; padding: 0 10%; }
+        
+        .back-nav { padding: 30px 0; display: flex; align-items: center; }
+        .btn-back { 
+            display: inline-flex; align-items: center; gap: 10px; padding: 10px 20px; 
+            background: var(--negro-palido); color: var(--verde-palido); 
+            text-decoration: none; border-radius: 8px; font-weight: 600; transition: 0.3s; 
+        }
+        .btn-back:hover { background: #2a2d30; border-color: var(--verde-fuerte); transform: translateX(-5px); }
+
+        .char-hero {
+            background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+            color: white; padding: 60px 40px; border-radius: 20px; margin-bottom: 40px;
+            position: relative; overflow: hidden; border: 1px solid #059669;
+        }
+        .char-hero i { position: absolute; right: -20px; bottom: -20px; font-size: 200px; opacity: 0.1; transform: rotate(-10deg); }
+
+        .cross-ref { color: #10b981; text-decoration: none; font-weight: 600; border-bottom: 1px dashed #10b981; }
+        .cross-ref:hover { color: #34d399; border-bottom-style: solid; }
+
+        .logic-card {
+            background: #f0fdf4; border: 1px solid #dcfce7; padding: 25px; border-radius: 12px; margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="loader">
+        <div class="loader-wrap">
+            <div class="square"></div>
+            <div class="square"></div>
+            <div class="square"></div>
+        </div>
+    </div>
+
+    <main>
+        <div class="back-nav">
+            <a href="nodos.html" class="btn-back">
+                <i data-lucide="arrow-left"></i> Volver a la API
+            </a>
+        </div>
+
+        <div class="content-area">
+            <div id="content">
+                <header class="char-hero">
+                    <i data-lucide="user"></i>
+                    <h1 style="color: #b7e4c7; margin: 0;">CharacterBody2D</h1>
+                    <p style="font-size: 1.2rem; opacity: 0.9; margin-top: 10px;">
+                        Control cinemático, movimiento por Delta Time y lógica de entidades.
+                    </p>
+                </header>
+
+                <section>
+                    <h2><i data-lucide="Zap"></i> ¿Qué es CharacterBody2D?</h2>
+                    <p>Es el nodo principal para cualquier objeto que requiera movimiento complejo controlado por el usuario o IA. A diferencia de un nodo estático, el CharacterBody está optimizado para actualizar su posición en cada frame basándose en el <a href="physics.html" class="cross-ref">Motor Físico</a>.</p>
+                </section>
+
+                <div class="logic-card">
+                    <h3><i data-lucide="clock"></i> Independencia de FPS (Delta Time)</h3>
+                    <p>En la V0.5, el método <code>mov()</code> integra automáticamente el <b>dt</b> (Delta Time). Esto garantiza que el jugador se mueva a la misma velocidad en una PC de 30 FPS que en una de 144 FPS.</p>
+                </div>
+
+                <section style="margin-top: 40px;">
+                    <h2><i data-lucide="code"></i> Métodos Principales</h2>
+                    <div class="grid-docs" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                        <div class="card">
+                            <h3>eg_Speed(valor)</h3>
+                            <p>Establece la velocidad base de movimiento. El Kernel se encarga de aplicarla al vector de dirección.</p>
+                        </div>
+                        <div class="card">
+                            <h3>mov()</h3>
+                            <p>Activa la escucha de teclado (WASD/Flechas) y desplaza el nodo. Es ideal para prototipos rápidos.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="margin-top: 40px;">
+                    <h2><i data-lucide="terminal"></i> Ejemplo de Script</h2>
+                    <p>Configuración de un personaje básico con seguimiento de <a href="camera.html" class="cross-ref">Camera2D</a>:</p>
+                    <pre><code>class Player:
+    def __init__(self):
+        # Inyectamos el cuerpo y el sprite visual
+        libs(self, CharacterBody2D, Sprite2D)
+        self.eg_Speed(400) # Píxeles por segundo
+
+    def on_update(self):
+        # El Kernel procesa el movimiento automáticamente
+        self.mov() 
+
+    def on_draw(self):
+        # Se dibuja pasando por el Pipeline de Render
+        render(self)</code></pre>
+                </section>
+
+                <div class="card" style="background: #f8fafc; border-left: 5px solid #10b981; margin-top: 40px;">
+                    <h4><i data-lucide="info"></i> Nota sobre Colisiones</h4>
+                    <p>Para que un CharacterBody no atraviese paredes, debe tener inyectado también un <a href="CollisionShape2D.html" class="cross-ref">CollisionShape2D</a>. El Kernel detectará el sólido antes de finalizar el paso de movimiento.</p>
+                </div>
+
+                <footer style="padding: 60px 0; text-align: center; color: #94a3b8; font-size: 0.8rem;">
+                    PyEgar Engine V0.5 • Sistema de Entidades Cinemáticas
+                </footer>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+        window.onload = () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                if(loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.remove(), 600);
+                }
+            }, 800); 
+        };
+    </script>
+</body>
+</html>

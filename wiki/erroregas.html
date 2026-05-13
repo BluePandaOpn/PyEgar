@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyEgar Docs | ERROREGAS</title>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/BluePandaOpn/PyEgar@main/wiki/style.css">
+    <style>
+        /* Estilo temático de Terminal para ERROREGAS */
+        .terminal-box {
+            background: #0f172a;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Fira Code', monospace;
+            color: #4ade80;
+            border: 1px solid #1e293b;
+            margin: 20px 0;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .terminal-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #1e293b;
+            padding: 5px 15px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .dot-red { background: #f87171; }
+        .dot-yellow { background: #fbbf24; }
+        .dot-green { background: #4ade80; }
+
+        .error-card {
+            border-left: 4px solid #ef4444;
+            background: #fef2f2;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .warning-card {
+            border-left: 4px solid #f59e0b;
+            background: #fffbeb;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #dcfce7;
+            color: #166534;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <div class="loader-wrap">
+            <div class="square"></div>
+            <div class="square"></div>
+            <div class="square"></div>
+        </div>
+    </div>
+
+    <nav>
+        <div class="logo-box">
+            <img src="https://raw.githubusercontent.com/BluePandaOpn/PyEgar/main/Assets/Logo/logo.png" alt="Logo PyEgar" class="logo-img">
+            <div class="engine-name">PYEGAR HUB</div>
+        </div>
+
+        <div class="nav-label">Core Engine</div>
+        <a href="../index.html" class="nav-link"><i data-lucide="home"></i> Guía de Inicio</a>
+        <a href="nodos.html" class="nav-link"><i data-lucide="code-2"></i> API de Nodos</a>
+        <a href="wind.html" class="nav-link"><i data-lucide="monitor"></i> Ventana (Wind.py)</a>
+        
+        <div class="nav-label">Física y Gráficos</div>
+        <a href="physics.html" class="nav-link"><i data-lucide="zap"></i> Motor Físico</a>
+        <a href="render.html" class="nav-link"><i data-lucide="cpu"></i> Pipeline de Render</a>
+        <a href="colores.html" class="nav-link"><i data-lucide="palette"></i> Recursos de Color</a>
+        
+        <div class="nav-label">Sistema y Seguridad</div>
+        <a href="erroregas.html" class="nav-link active" style="color: #f87171;"><i data-lucide="shield-alert"></i> ERROREGAS</a>
+        <a href="decorators.html" class="nav-link"><i data-lucide="lock"></i> Decoradores</a>
+        <a href="config.html" class="nav-link"><i data-lucide="settings"></i> Configuración</a>
+    </nav>
+
+    <main>
+        <div class="top-nav">
+            <div style="font-size: 0.8rem; font-weight: 600; color: #6b7280;">Security Layer • Centinela System</div>
+        </div>
+
+        <div class="content-area">
+            <div id="content">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h1>Centinela ERROREGAS <i data-lucide="shield-check" style="color: #4ade80;"></i></h1>
+                    <span class="status-badge"><span class="dot dot-green"></span> SISTEMA ONLINE</span>
+                </div>
+                
+                <p>ERROREGAS es el módulo de seguridad activa de PyEgar. Su función es interceptar excepciones, validar la integridad de los nodos inyectados y generar reportes legibles antes de que el motor colapse.</p>
+
+                <div class="terminal-box">
+                    <div class="terminal-header">
+                        <div class="dot dot-red"></div>
+                        <div class="dot dot-yellow"></div>
+                        <div class="dot dot-green"></div>
+                    </div>
+                    <br>
+                    <div>>>> [ERROREGAS] Inicializando vigilancia...</div>
+                    <div style="color: #94a3b8;">>>> [ERROREGAS] Escaneando decoradores @private...</div>
+                    <div style="color: #fbbf24;">>>> [ERROREGAS] Advertencia: Delta Time desincronizado en Entity_01</div>
+                    <div>>>> [ERROREGAS] Kernel V0.3 protegido.</div>
+                </div>
+
+                <section>
+                    <h2><i data-lucide="activity"></i> Monitoreo Activo</h2>
+                    <p>El centinela actúa principalmente en tres frentes del motor:</p>
+                    
+                    <div class="warning-card">
+                        <h4 style="color: #92400e;"><i data-lucide="alert-triangle"></i> Validación de Inyección</h4>
+                        <p>Verifica que los componentes pasados a <code>libs()</code> sean clases válidas de PyEgar. Si intentas inyectar un objeto no soportado, ERROREGAS detiene el proceso antes de corromper la memoria.</p>
+                    </div>
+
+                    <div class="error-card">
+                        <h4 style="color: #991b1b;"><i data-lucide="bug"></i> Intercepción de Atributos</h4>
+                        <p>Vigila el acceso a variables protegidas. Si un usuario intenta modificar una variable de solo lectura (como el bus de datos <code>_eg_state</code>), se dispara un aviso de integridad.</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2><i data-lucide="power"></i> Inicialización</h2>
+                    <p>ERROREGAS es lo primero que se carga al hacer <code>import pyegar</code>. No requiere configuración manual.</p>
+                    <pre><code># Internamente en el Kernel
+try:
+    from .Components.ErrorEgar.erroregas import ERROREGAS
+    ERROREGAS.start()
+except ImportError:
+    print("Fallo crítico: El centinela no responde.")</code></pre>
+                </section>
+
+                <section style="text-align: center; margin-top: 50px;">
+                    <a href="decorators.html" class="btn-publish" style="text-decoration: none;">Siguiente: Decoradores Seguros <i data-lucide="lock"></i></a>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+        window.onload = () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                if(loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.remove(), 600);
+                }
+            }, 1200); 
+        };
+    </script>
+</body>
+</html>

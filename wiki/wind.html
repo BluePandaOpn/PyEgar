@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyEgar Docs | Ventana y Ciclo</title>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/BluePandaOpn/PyEgar@main/wiki/style.css">
+</head>
+<body>
+
+    <div id="loader">
+        <div class="loader-wrap">
+            <div class="square"></div>
+            <div class="square"></div>
+            <div class="square"></div>
+        </div>
+    </div>
+
+    <nav>
+        <div class="logo-box">
+            <img src="https://raw.githubusercontent.com/BluePandaOpn/PyEgar/main/Assets/Logo/logo.png" alt="Logo PyEgar" class="logo-img">
+            <div class="engine-name">PYEGAR HUB</div>
+        </div>
+
+        <div class="nav-label">Core Engine</div>
+        <a href="../index.html" class="nav-link"><i data-lucide="home"></i> Guía de Inicio</a>
+        <a href="nodos.html" class="nav-link"><i data-lucide="code-2"></i> API de Nodos</a>
+        <a href="wind.html" class="nav-link active"><i data-lucide="monitor"></i> Ventana (Wind.py)</a>
+        
+        <div class="nav-label">Física y Gráficos</div>
+        <a href="physics.html" class="nav-link"><i data-lucide="zap"></i> Motor Físico</a>
+        <a href="render.html" class="nav-link"><i data-lucide="cpu"></i> Pipeline de Render</a>
+        <a href="colores.html" class="nav-link"><i data-lucide="palette"></i> Recursos de Color</a>
+        
+        <div class="nav-label">Sistema y Seguridad</div>
+        <a href="erroregas.html" class="nav-link" style="color: #f87171;"><i data-lucide="shield-alert"></i> ERROREGAS</a>
+        <a href="decorators.html" class="nav-link"><i data-lucide="lock"></i> Decoradores</a>
+        <a href="config.html" class="nav-link"><i data-lucide="settings"></i> Configuración</a>
+    </nav>
+
+    <main>
+        <div class="top-nav">
+            <div style="font-size: 0.8rem; font-weight: 600; color: #6b7280;">Documentación de Núcleo • Wind.py</div>
+        </div>
+
+        <div class="content-area">
+            <div id="content">
+                <h1>Ventana y Ciclo de Vida <i data-lucide="refresh-cw"></i></h1>
+                <p>El módulo <code>Wind.py</code> es el encargado de inicializar Pygame, crear la ventana y gestionar el <b>Game Loop</b>. Su característica principal es la detección automática de configuración.</p>
+
+                <section>
+                    <h2><i data-lucide="settings-2"></i> Configuración Automática</h2>
+                    <p>PyEgar lee las variables globales de tu archivo principal (<code>__main__</code>). No necesitas pasar parámetros manuales a la función de inicio.</p>
+                    
+                    <div class="grid-docs">
+                        <div class="card">
+                            <h3>Variables Detectadas:</h3>
+                            <ul>
+                                <li><code>WIDTH</code>: Ancho de ventana (Default: 800).</li>
+                                <li><code>HEIGHT</code>: Alto de ventana (Default: 600).</li>
+                                <li><code>TITLE</code>: Título de la ventana.</li>
+                                <li><code>FPS</code>: Límite de fotogramas por segundo.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2><i data-lucide="timer"></i> El Corazón: Delta Time (dt)</h2>
+                    <p>Para evitar que el juego corra más rápido en PCs potentes, <code>Wind.py</code> calcula el tiempo transcurrido entre frames.</p>
+                    <div class="card" style="background: var(--negro-palido); color: var(--verde-palido);">
+                        <p style="margin: 0;"><b>Fórmula interna:</b> <code>milli / 1000.0</code></p>
+                        <p style="font-size: 0.85rem; color: #a1a1aa;">Este valor se inyecta automáticamente en todos los nodos que usen movimiento físico.</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2><i data-lucide="terminal"></i> Implementación del Loop</h2>
+                    <p>Existen dos funciones clave para poner en marcha el motor:</p>
+                    
+                    <div class="card">
+                        <h4>1. <code>init()</code></h4>
+                        <p>Prepara la pantalla, el reloj (Clock) y el centinela. Retorna un diccionario de configuración.</p>
+                        
+                        <h4>2. <code>win(config).start()</code></h4>
+                        <p>Crea la instancia de la ventana y arranca el bucle <code>while True</code> interno que gestiona eventos y renderizado.</p>
+                    </div>
+
+                    <pre><code># Código Real en main.py
+from pyegar import *
+
+# Variables de entorno
+WIDTH, HEIGHT = 1280, 720
+TITLE = "Space Adventure"
+FPS = 144
+
+# Ejecución
+config = init()
+app = win(config)
+app.start() </code></pre>
+                </section>
+
+                <section>
+                    <h2><i data-lucide="layers"></i> Función render()</h2>
+                    <p>Si necesitas actualizar un objeto manualmente fuera del loop automático, <code>Wind.py</code> expone la función <code>render(nodo)</code>.</p>
+                    <div class="card">
+                        <p>Esta función hace tres cosas críticas:</p>
+                        <ol>
+                            <li>Sincroniza el <b>Delta Time</b> con el bus de datos del nodo.</li>
+                            <li>Ejecuta el pipeline de actualización de <code>libs</code>.</li>
+                            <li>Dibuja el nodo en la <code>_current_screen</code> global.</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <section style="text-align: center; margin-top: 50px;">
+                    <a href="physics.html" class="btn-publish" style="text-decoration: none;">Siguiente: Motor Físico <i data-lucide="zap"></i></a>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+        window.onload = () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                if(loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.remove(), 600);
+                }
+            }, 1000); 
+        };
+    </script>
+</body>
+</html>

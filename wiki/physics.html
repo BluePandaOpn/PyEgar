@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyEgar Docs | Motor Físico</title>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/BluePandaOpn/PyEgar@main/wiki/style.css">
+</head>
+<body>
+
+    <div id="loader">
+        <div class="loader-wrap">
+            <div class="square"></div>
+            <div class="square"></div>
+            <div class="square"></div>
+        </div>
+    </div>
+
+    <nav>
+        <div class="logo-box">
+            <img src="https://raw.githubusercontent.com/BluePandaOpn/PyEgar/main/Assets/Logo/logo.png" alt="Logo PyEgar" class="logo-img">
+            <div class="engine-name">PYEGAR HUB</div>
+        </div>
+
+        <div class="nav-label">Core Engine</div>
+        <a href="../index.html" class="nav-link"><i data-lucide="home"></i> Guía de Inicio</a>
+        <a href="nodos.html" class="nav-link"><i data-lucide="code-2"></i> API de Nodos</a>
+        <a href="wind.html" class="nav-link"><i data-lucide="monitor"></i> Ventana (Wind.py)</a>
+        
+        <div class="nav-label">Física y Gráficos</div>
+        <a href="physics.html" class="nav-link active"><i data-lucide="zap"></i> Motor Físico</a>
+        <a href="render.html" class="nav-link"><i data-lucide="cpu"></i> Pipeline de Render</a>
+        <a href="colores.html" class="nav-link"><i data-lucide="palette"></i> Recursos de Color</a>
+        
+        <div class="nav-label">Sistema y Seguridad</div>
+        <a href="erroregas.html" class="nav-link" style="color: #f87171;"><i data-lucide="shield-alert"></i> ERROREGAS</a>
+        <a href="decorators.html" class="nav-link"><i data-lucide="lock"></i> Decoradores</a>
+        <a href="config.html" class="nav-link"><i data-lucide="settings"></i> Configuración</a>
+    </nav>
+
+    <main>
+        <div class="top-nav">
+            <div style="font-size: 0.8rem; font-weight: 600; color: #6b7280;">Documentación de Núcleo • Physics System</div>
+        </div>
+
+        <div class="content-area">
+            <div id="content">
+                <h1>Motor Físico <i data-lucide="box"></i></h1>
+                <p>El sistema físico de PyEgar es <b>determinista</b>. Gracias al uso de Delta Time, un objeto se moverá a la misma velocidad real tanto a 30 FPS como a 144 FPS.</p>
+
+                <section>
+                    <h2><i data-lucide="trending-up"></i> Lógica de Movimiento</h2>
+                    <p>Cuando inyectas <code>CharacterBody2D</code>, el motor utiliza la lógica interna de <code>move_logic</code> para procesar la posición del nodo en cada frame.</p>
+                    
+                    <div class="card" style="border-left: 5px solid var(--verde-palido);">
+                        <h4>La ecuación del motor:</h4>
+                        <p><code>Nueva Posición = Posición Actual + (Velocidad * Delta Time * Dirección)</code></p>
+                    </div>
+                    
+                    <p>Esto asegura que si defines una velocidad de <code>200</code>, el objeto recorra exactamente <b>200 píxeles en un segundo</b> real.</p>
+                </section>
+
+                <section>
+                    <h2><i data-lucide="arrow-down"></i> Gravedad (Gravity2D)</h2>
+                    <p>La gravedad es un componente opcional que puedes inyectar para juegos de plataformas o simulaciones físicas.</p>
+                    
+                    <div class="grid-docs">
+                        <div class="card">
+                            <h3>Inyección</h3>
+                            <code>libs(self, Gravity2D)</code>
+                            <p><small>Añade aceleración constante en el eje Y.</small></p>
+                        </div>
+                        <div class="card">
+                            <h3>Variables de Control</h3>
+                            <ul>
+                                <li><code>self.gravity_force</code>: Fuerza de atracción.</li>
+                                <li><code>self.is_on_floor</code>: Booleano que detiene la caída.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <pre><code># Ejemplo práctico de un personaje con gravedad
+class Hero:
+    def __init__(self):
+        libs(self, CharacterBody2D, Gravity2D)
+        self.gravity_force = 15.0 # Ajuste de peso
+        
+    def update(self):
+        if self.is_on_floor:
+            self.jump() # Solo salta si toca suelo</code></pre>
+                </section>
+
+                <section>
+                    <h2><i data-lucide="shield"></i> Resolución de Colisiones</h2>
+                    <p>PyEgar procesa las colisiones en dos pasos mediante el nodo <code>CollisionShape2D</code>:</p>
+                    <ol>
+                        <li><b>Sincronización:</b> La hitbox se mueve a las coordenadas <code>x, y</code> del nodo.</li>
+                        <li><b>Detección:</b> Se comprueba si el Rect de la entidad solapa con otro Rect activo en el bus de datos.</li>
+                    </ol>
+
+                    <div class="card" style="background: #fff5f5; border: 1px solid #feb2b2;">
+                        <h4 style="color: #c53030;"><i data-lucide="alert-triangle"></i> Nota Técnica</h4>
+                        <p style="font-size: 0.9rem;">Las colisiones en V0.3 son de tipo <b>AABB</b> (Axis-Aligned Bounding Box). No soportan rotación de colisión aún.</p>
+                    </div>
+                </section>
+
+                <section style="text-align: center; margin-top: 50px;">
+                    <a href="render.html" class="btn-publish" style="text-decoration: none;">Siguiente: Pipeline de Render <i data-lucide="cpu"></i></a>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+        window.onload = () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                if(loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.remove(), 600);
+                }
+            }, 1000); 
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyEgar Docs | Sprite2D Component</title>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/BluePandaOpn/PyEgar@main/wiki/style.css">
+
+    <style>
+        body { display: block; overflow-y: auto; }
+        main { margin-left: 0 !important; width: 100%; min-height: 100vh; padding: 0 10%; }
+        
+        .back-nav { padding: 30px 0; display: flex; align-items: center; }
+        .btn-back { 
+            display: inline-flex; align-items: center; gap: 10px; padding: 10px 20px; 
+            background: var(--negro-palido); color: var(--verde-palido); 
+            text-decoration: none; border-radius: 8px; font-weight: 600; transition: 0.3s; 
+        }
+        .btn-back:hover { background: #2a2d30; border-color: var(--verde-fuerte); transform: translateX(-5px); }
+
+        .sprite-hero {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            color: white; padding: 60px 40px; border-radius: 20px; margin-bottom: 40px;
+            position: relative; overflow: hidden; border: 1px solid #4338ca;
+        }
+        .sprite-hero i { position: absolute; right: -20px; bottom: -20px; font-size: 200px; opacity: 0.1; transform: rotate(10deg); }
+
+        .cross-ref { color: #6366f1; text-decoration: none; font-weight: 600; border-bottom: 1px dashed #6366f1; }
+        .cross-ref:hover { color: #818cf8; border-bottom-style: solid; }
+
+        .texture-info {
+            background: #f5f3ff; border: 1px solid #ddd6fe; padding: 25px; border-radius: 12px; margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="loader">
+        <div class="loader-wrap">
+            <div class="square"></div>
+            <div class="square"></div>
+            <div class="square"></div>
+        </div>
+    </div>
+
+    <main>
+        <div class="back-nav">
+            <a href="nodos.html" class="btn-back">
+                <i data-lucide="arrow-left"></i> Volver a la API
+            </a>
+        </div>
+
+        <div class="content-area">
+            <div id="content">
+                <header class="sprite-hero">
+                    <i data-lucide="image"></i>
+                    <h1 style="color: #c7d2fe; margin: 0;">Sprite2D Component</h1>
+                    <p style="font-size: 1.2rem; opacity: 0.9; margin-top: 10px;">
+                        Gestión de texturas, escalado y transformaciones visuales.
+                    </p>
+                </header>
+
+                <section>
+                    <h2><i data-lucide="layers"></i> ¿Qué es Sprite2D?</h2>
+                    <p>Es el componente encargado de cargar y mostrar archivos de imagen (PNG, JPG) en el mundo del juego. En el Kernel V0.5, los sprites se integran automáticamente con el <a href="render.html" class="cross-ref">Pipeline de Render</a> para optimizar el dibujado.</p>
+                </section>
+
+                <div class="texture-info">
+                    <h3><i data-lucide="zap"></i> Flip Automático</h3>
+                    <p>El componente lee la variable <code>x_direction</code> del nodo. Si es negativa, el sprite se invierte horizontalmente de forma automática sin que tengas que procesar la imagen manualmente.</p>
+                </div>
+
+                
+
+                <section style="margin-top: 40px;">
+                    <h2><i data-lucide="code"></i> Propiedades y Métodos</h2>
+                    <div class="grid-docs" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                        <div class="card">
+                            <h3>load_texture(path)</h3>
+                            <p>Carga una imagen en la memoria de video. Se recomienda usarlo solo en el <code>__init__</code>.</p>
+                        </div>
+                        <div class="card">
+                            <h3>scale(x, y)</h3>
+                            <p>Ajusta el tamaño visual del sprite. Esto no afecta a la <a href="CollisionShape2D.html" class="cross-ref">CollisionShape2D</a> a menos que se sincronice.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="margin-top: 40px;">
+                    <h2><i data-lucide="terminal"></i> Implementación</h2>
+                    <p>Un ejemplo básico de un proyectil que usa una textura:</p>
+                    <pre><code>class Bala:
+    def __init__(self):
+        libs(self, Sprite2D)
+        # Cargamos la imagen desde la carpeta Assets
+        self.sprite.load_texture("Assets/bala.png")
+        self.sprite.scale(0.5, 0.5)
+
+    def on_draw(self):
+        # El Kernel se encarga de posicionarlo según x, y
+        render(self)</code></pre>
+                </section>
+
+                <div class="card" style="background: #f8fafc; border-left: 5px solid #6366f1; margin-top: 40px;">
+                    <h4><i data-lucide="info"></i> Relación con el Viewport</h4>
+                    <p>Al igual que el <a href="draw.html" class="cross-ref">DrawingComponent</a>, la posición final del Sprite en pantalla es calculada restando el offset de la <a href="camera.html" class="cross-ref">Camera2D</a>.</p>
+                </div>
+
+                <footer style="padding: 60px 0; text-align: center; color: #94a3b8; font-size: 0.8rem;">
+                    PyEgar Engine V0.5 • Sistema de Sprites y Texturas
+                </footer>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+        window.onload = () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                if(loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.remove(), 600);
+                }
+            }, 800); 
+        };
+    </script>
+</body>
+</html>

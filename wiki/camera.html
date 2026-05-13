@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyEgar Docs | Camera2D System</title>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/BluePandaOpn/PyEgar@main/wiki/style.css">
+
+    <style>
+        /* Estructura limpia sin sidebar */
+        body {
+            display: block;
+            overflow-y: auto;
+        }
+
+        main {
+            margin-left: 0 !important;
+            width: 100%;
+            min-height: 100vh;
+            padding: 0 10%;
+        }
+
+        .back-nav {
+            padding: 30px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: var(--negro-palido);
+            color: var(--verde-palido);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .btn-back:hover {
+            background: #2a2d30;
+            border-color: var(--verde-fuerte);
+            transform: translateX(-5px);
+        }
+
+        .camera-hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #334155;
+        }
+
+        .camera-hero i {
+            position: absolute;
+            right: -20px;
+            bottom: -20px;
+            font-size: 200px;
+            opacity: 0.1;
+            transform: rotate(-15deg);
+        }
+
+        /* Estilo para links de referencia cruzada */
+        .cross-ref {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 1px dashed #3b82f6;
+        }
+
+        .cross-ref:hover {
+            color: #60a5fa;
+            border-bottom-style: solid;
+        }
+    </style>
+</head>
+<body>
+    <div id="loader">
+        <div class="loader-wrap">
+            <div class="square"></div>
+            <div class="square"></div>
+            <div class="square"></div>
+        </div>
+    </div>
+
+    <main>
+        <div class="back-nav">
+            <a href="nodos.html" class="btn-back">
+                <i data-lucide="arrow-left"></i> Volver a la API
+            </a>
+        </div>
+
+        <div class="content-area">
+            <div id="content">
+                <header class="camera-hero">
+                    <i data-lucide="video"></i>
+                    <h1 style="color: #b7e4c7; margin: 0;">Camera2D System</h1>
+                    <p style="font-size: 1.2rem; opacity: 0.9; margin-top: 10px;">
+                        Gestión de Viewport y seguimiento de objetivos en V0.5.
+                    </p>
+                </header>
+
+                <section>
+                    <h2><i data-lucide="eye"></i> ¿Qué es la Camera2D?</h2>
+                    <p>Es el componente encargado de transformar las coordenadas globales del mundo en coordenadas locales de pantalla. Sin una cámara, los objetos fuera de la resolución base (800x600) no serían visibles.</p>
+                </section>
+
+                <div class="grid-docs" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                    <div class="card">
+                        <h3><i data-lucide="focus"></i> follow(target)</h3>
+                        <p>Vincula la vista a un nodo. El motor mantendrá al objetivo centrado.</p>
+                        <code>self.camera.follow(self.player)</code>
+                    </div>
+                    <div class="card">
+                        <h3><i data-lucide="move"></i> smoothing</h3>
+                        <p>Añade inercia al movimiento para evitar sacudidas visuales.</p>
+                        <code>self.camera.smoothing = 0.1</code>
+                    </div>
+                </div>
+
+                <section style="margin-top: 40px;">
+                    <h2><i data-lucide="link"></i> Integración con el Render</h2>
+                    <p>La cámara actúa directamente sobre el <a href="render.html" class="cross-ref">Pipeline de Renderizado</a>. Antes de que el motor dibuje un <a href="draw.html" class="cross-ref">DrawingComponent</a> o un Sprite, aplica un "Offset" basado en la posición de la cámara.</p>
+                    
+                    <div class="card" style="background: #f8fafc; border-left: 5px solid #3b82f6;">
+                        <p><b>Dato importante:</b> En la V0.5, las colisiones también se desplazan con la cámara. Puedes aprender más en la sección de <a href="physics.html" class="cross-ref">Motor Físico</a>.</p>
+                    </div>
+                </section>
+
+                <section style="margin-top: 40px;">
+                    <h2><i data-lucide="code"></i> Ejemplo de Uso</h2>
+                    <pre><code>class Mundo:
+    def __init__(self):
+        libs(self, Camera2D)
+        # Seguir al jugador con suavizado
+        self.camera.follow(self.jugador)
+        self.camera.smoothing = 0.05
+
+    def on_draw(self):
+        render(self.jugador) # Se dibuja relativo a la cámara</code></pre>
+                </section>
+
+                <footer style="padding: 60px 0; text-align: center; color: #94a3b8; font-size: 0.8rem;">
+                    PyEgar Engine V0.5 • Sistema de Cámara y Viewport
+                </footer>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+        window.onload = () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                if(loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.remove(), 600);
+                }
+            }, 800); 
+        };
+    </script>
+</body>
+</html>

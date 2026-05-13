@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyEgar Docs | CollisionShape2D</title>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/BluePandaOpn/PyEgar@main/wiki/style.css">
+
+    <style>
+        body { display: block; overflow-y: auto; }
+        main { margin-left: 0 !important; width: 100%; min-height: 100vh; padding: 0 10%; }
+        
+        .back-nav { padding: 30px 0; display: flex; align-items: center; }
+        .btn-back { 
+            display: inline-flex; align-items: center; gap: 10px; padding: 10px 20px; 
+            background: var(--negro-palido); color: var(--verde-palido); 
+            text-decoration: none; border-radius: 8px; font-weight: 600; transition: 0.3s; 
+        }
+        .btn-back:hover { background: #2a2d30; transform: translateX(-5px); }
+
+        .collision-hero {
+            background: linear-gradient(135deg, #450a0a 0%, #7f1d1d 100%);
+            color: white; padding: 60px 40px; border-radius: 20px; margin-bottom: 40px;
+            position: relative; overflow: hidden; border: 1px solid #991b1b;
+        }
+        .collision-hero i { position: absolute; right: -20px; bottom: -20px; font-size: 200px; opacity: 0.1; }
+
+        .cross-ref { color: #ef4444; text-decoration: none; font-weight: 600; border-bottom: 1px dashed #ef4444; }
+        .cross-ref:hover { color: #f87171; border-bottom-style: solid; }
+
+        .event-card {
+            background: #fff5f5; border: 1px solid #fee2e2; padding: 20px; border-radius: 12px; margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="loader">
+        <div class="loader-wrap">
+            <div class="square"></div>
+            <div class="square"></div>
+            <div class="square"></div>
+        </div>
+    </div>
+
+    <main>
+        <div class="back-nav">
+            <a href="nodos.html" class="btn-back">
+                <i data-lucide="arrow-left"></i> Volver a la API
+            </a>
+        </div>
+
+        <div class="content-area">
+            <div id="content">
+                <header class="collision-hero">
+                    <i data-lucide="box"></i>
+                    <h1 style="color: #fca5a5; margin: 0;">CollisionShape2D</h1>
+                    <p style="font-size: 1.2rem; opacity: 0.9; margin-top: 10px;">
+                        Gestión de Hitboxes, Física AABB y Detección de Eventos.
+                    </p>
+                </header>
+
+                <section>
+                    <h2><i data-lucide="shield"></i> ¿Qué es CollisionShape2D?</h2>
+                    <p>Es el componente que otorga "presencia física" a un nodo. Permite que el Kernel detecte cuando dos objetos se tocan o cuando el puntero del mouse interactúa con una entidad.</p>
+                </section>
+
+                <section class="event-card">
+                    <h3><i data-lucide="mouse-pointer-2"></i> Interacción con el Mouse</h3>
+                    <p>Una de las funciones más potentes en la V0.5 es <code>is_hover()</code>. A diferencia de otros motores, PyEgar calcula la posición del mouse relativa a la <a href="camera.html" class="cross-ref">Camera2D</a> automáticamente.</p>
+                    <code>if self.collision.is_hover(): # El mouse está encima</code>
+                </section>
+
+                
+
+                <section style="margin-top: 40px;">
+                    <h2><i data-lucide="code"></i> Métodos Principales</h2>
+                    <div class="grid-docs" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                        <div class="card">
+                            <h3>rect(w, h)</h3>
+                            <p>Define un área rectangular de colisión. Se sincroniza con el <a href="render.html" class="cross-ref">Pipeline de Render</a> para mantenerse sobre el Sprite.</p>
+                        </div>
+                        <div class="card">
+                            <h3>is_colliding_with(obj)</h3>
+                            <p>Devuelve True si la hitbox actual solapa con la del objeto objetivo (Detección AABB).</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="margin-top: 40px;">
+                    <h2><i data-lucide="terminal"></i> Implementación Práctica</h2>
+                    <p>Para crear un objeto clickeable (como una carta en el Memory Game):</p>
+                    <pre><code>class Carta:
+    def __init__(self):
+        libs(self, Sprite2D, CollisionShape2D)
+        self.collision.rect(100, 150) # Tamaño de la hitbox
+
+    def on_update(self):
+        if self.collision.is_hover() and mouse.left_click():
+            self.voltear_carta()</code></pre>
+                </section>
+
+                <div class="card" style="background: #f8fafc; border-left: 5px solid #64748b; margin-top: 40px;">
+                    <h4><i data-lucide="info"></i> Nota sobre el Dibujo</h4>
+                    <p>Si quieres ver la hitbox para debuggear, puedes usar el <a href="draw.html" class="cross-ref">DrawingComponent</a> para dibujar un rectángulo con el mismo tamaño justo encima.</p>
+                </div>
+
+                <footer style="padding: 60px 0; text-align: center; color: #94a3b8; font-size: 0.8rem;">
+                    PyEgar Engine V0.5 • Sistema de Colisiones Proyectadas
+                </footer>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+        window.onload = () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                if(loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.remove(), 600);
+                }
+            }, 800); 
+        };
+    </script>
+</body>
+</html>

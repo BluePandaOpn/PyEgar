@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyEgar Docs | Inicio</title>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/BluePandaOpn/PyEgar@main/wiki/style.css">
+</head>
+<body>
+
+    <div id="loader">
+        <div class="loader-wrap">
+            <div class="square"></div>
+            <div class="square"></div>
+            <div class="square"></div>
+        </div>
+    </div>
+
+    <nav>
+        <div class="logo-box">
+            <img src="https://raw.githubusercontent.com/BluePandaOpn/PyEgar/main/Assets/Logo/logo.png" alt="Logo PyEgar" class="logo-img">
+            <div class="engine-name">PYEGAR HUB</div>
+        </div>
+
+        <div class="nav-label">Core Engine</div>
+        <a href="index.html" class="nav-link active"><i data-lucide="home"></i> Guía de Inicio</a>
+        <a href="wiki/nodos.html" class="nav-link"><i data-lucide="code-2"></i> API de Nodos</a>
+        <a href="wiki/wind.html" class="nav-link"><i data-lucide="monitor"></i> Ventana (Wind.py)</a>
+        
+        <div class="nav-label">Física y Gráficos</div>
+        <a href="wiki/physics.html" class="nav-link"><i data-lucide="zap"></i> Motor Físico</a>
+        <a href="wiki/render.html" class="nav-link"><i data-lucide="cpu"></i> Pipeline de Render</a>
+        <a href="wiki/colores.html" class="nav-link"><i data-lucide="palette"></i> Recursos de Color</a>
+        
+        <div class="nav-label">Sistema y Seguridad</div>
+        <a href="wiki/erroregas.html" class="nav-link" style="color: #f87171;"><i data-lucide="shield-alert"></i> ERROREGAS</a>
+        <a href="wiki/decorators.html" class="nav-link"><i data-lucide="lock"></i> Decoradores</a>
+        <a href="wiki/config.html" class="nav-link"><i data-lucide="settings"></i> Configuración</a>
+    </nav>
+
+    <main>
+        <div class="top-nav">
+            <div style="font-size: 0.8rem; font-weight: 600; color: #6b7280;">Kernel V0.3 ALPHA • Documentación Oficial</div>
+            
+            <a href="https://downgit.github.io/#/home?url=https://github.com/BluePandaOpn/PyEgar/tree/main/pyegar" 
+                class="btn-publish" 
+                style="text-decoration: none;">
+                Descargar SDK <i data-lucide="download"></i>
+            </a>
+        </div>
+
+        <div class="content-area">
+            <div id="content">
+                <h1>Bienvenido a PyEgar <span class="badge">V0.3</span></h1>
+                <p>PyEgar es un motor 2D minimalista y potente para Python. Su filosofía se basa en la <b>Inyección de Nodos</b>: en lugar de heredar pesadas jerarquías, "inyectas" las capacidades que necesitas en tus clases.</p>
+
+                <section>
+                    <h2><i data-lucide="terminal"></i> ¿Cómo se usa?</h2>
+                    <p>El uso es extremadamente sencillo. Diseñas tu clase e inyectas las <code>libs</code> (librerías) del motor.</p>
+                    
+                    <pre><code>from pyegar import *
+
+class MiJuego:
+    def __init__(self):
+        # Inyectamos movimiento y gráficos en esta clase
+        libs(self, CharacterBody2D, Sprite2D)
+        
+        self.load_texture("player.png")
+        self.eg_Speed(250) # Píxeles por segundo
+        self.mov()         # Activa controles automáticos
+
+# Iniciar el motor
+game = win(init())
+game.start()</code></pre>
+                </section>
+
+                <section>
+                    <h2><i data-lucide="scale"></i> Ventajas y Desventajas</h2>
+                    <div class="grid-docs">
+                        <div class="card" style="border-top: 4px solid var(--verde-palido);">
+                            <h3 style="color: #2d6a4f;"><i data-lucide="check-circle"></i> Ventajas</h3>
+                            <ul style="padding-left: 20px; font-size: 0.95rem;">
+                                <li><b>Modularidad:</b> Solo consumes RAM por los nodos que inyectas.</li>
+                                <li><b>Delta Time:</b> Movimiento fluido sin importar la potencia de la PC.</li>
+                                <li><b>Seguridad:</b> Centinela ERROREGAS detecta fallos en tiempo real.</li>
+                            </ul>
+                        </div>
+
+                        <div class="card" style="border-top: 4px solid #f87171;">
+                            <h3 style="color: #991b1b;"><i data-lucide="x-circle"></i> Desventajas</h3>
+                            <ul style="padding-left: 20px; font-size: 0.95rem;">
+                                <li><b>Estado Alpha:</b> Funciones sujetas a cambios.</li>
+                                <li><b>Solo 2D:</b> No apto para entornos 3D.</li>
+                                <li><b>Dependencia:</b> Requiere <code>pygame</code>.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="text-align: center; margin-top: 60px; padding: 40px; background: #f8f9fa; border-radius: 8px;">
+                    <h3>¿Listo para programar?</h3>
+                    <p>Explora la API completa para ver qué puedes inyectar en tus entidades.</p>
+                    <a href="wiki/nodos.html" class="btn-publish" style="text-decoration: none; display: inline-block;">Ver API de Nodos <i data-lucide="arrow-right"></i></a>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+        window.onload = () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                if(loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.remove(), 600);
+                }
+            }, 1000); 
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyEgar Docs | Drawing Component</title>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/BluePandaOpn/PyEgar@main/wiki/style.css">
+
+    <style>
+        /* Ajustes para pantalla completa sin sidebar */
+        body {
+            display: block; /* Quitamos el flex del body original */
+            overflow-y: auto;
+        }
+
+        main {
+            margin-left: 0 !important; /* Eliminamos el espacio del sidebar */
+            width: 100%;
+            min-height: 100vh;
+            padding: 0 10%; /* Centramos el contenido */
+        }
+
+        .back-nav {
+            padding: 30px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: var(--negro-palido);
+            color: var(--verde-palido);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .btn-back:hover {
+            background: #2a2d30;
+            border-color: var(--verde-fuerte);
+            transform: translateX(-5px);
+        }
+
+        .draw-hero {
+            background: linear-gradient(135deg, #1a1c1e 0%, #2d3436 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .draw-hero i {
+            position: absolute;
+            right: -20px;
+            bottom: -20px;
+            font-size: 200px;
+            opacity: 0.1;
+            transform: rotate(-15deg);
+        }
+
+        .canvas-demo {
+            background: #f1f5f9;
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="loader">
+        <div class="loader-wrap">
+            <div class="square"></div>
+            <div class="square"></div>
+            <div class="square"></div>
+        </div>
+    </div>
+
+    <main>
+        <div class="back-nav">
+            <a href="nodos.html" class="btn-back">
+                <i data-lucide="arrow-left"></i> Volver a la API
+            </a>
+        </div>
+
+        <div class="content-area">
+            <div id="content">
+                <header class="draw-hero">
+                    <i data-lucide="pen-tool"></i>
+                    <h1 style="color: var(--verde-palido); margin: 0;">DrawingComponent (eg_draw)</h1>
+                    <p style="font-size: 1.2rem; opacity: 0.9; margin-top: 10px;">
+                        El sistema de dibujo vectorial nativo del Kernel V0.5.
+                    </p>
+                </header>
+
+                <section>
+                    <h2><i data-lucide="info"></i> ¿Qué es eg_draw?</h2>
+                    <p>Es un componente inyectable que permite a cualquier nodo dibujar formas geométricas directamente en la pantalla sin necesidad de cargar texturas externas. Es ideal para prototipado rápido, interfaces y efectos visuales dinámicos.</p>
+                </section>
+
+                <div class="grid-docs" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                    <div class="card">
+                        <h3><i data-lucide="square"></i> Rectángulos</h3>
+                        <p>Dibuja rectángulos con bordes redondeados o sólidos.</p>
+                        <code>self.eg_draw.rect(width, height, color)</code>
+                    </div>
+                    <div class="card">
+                        <h3><i data-lucide="circle"></i> Círculos</h3>
+                        <p>Dibuja círculos perfectos centrados en el nodo.</p>
+                        <code>self.eg_draw.circle(radius, color)</code>
+                    </div>
+                </div>
+
+                <section style="margin-top: 40px;">
+                    <h2><i data-lucide="code"></i> Ejemplo de Implementación</h2>
+                    <p>Para usarlo, simplemente inyéctalo en el <code>libs()</code> y llámalo dentro de <code>on_draw()</code>.</p>
+                    
+                    <pre><code>from pyegar import *
+
+class CajaMagica:
+    def __init__(self):
+        # Inyectamos el componente de dibujo
+        libs(self, DrawingComponent)
+        self.x, self.y = 100, 100
+
+    def on_draw(self):
+        # Dibujamos un cuadro azul de 50x50
+        self.eg_draw.rect(50, 50, BLUE)
+
+# En el main
+render(CajaMagica())</code></pre>
+                </section>
+
+                <section class="canvas-demo">
+                    <i data-lucide="layers" style="width: 48px; height: 48px; color: #64748b;"></i>
+                    <h4 style="color: #475569;">Sincronización Automática</h4>
+                    <p style="color: #64748b; font-size: 0.9rem;">Todas las formas dibujadas con <code>eg_draw</code> se desplazan automáticamente con la <b>Camera2D</b> y respetan el <b>Z-Index</b> del nodo.</p>
+                </section>
+
+                <footer style="padding: 60px 0; text-align: center; color: #94a3b8; font-size: 0.8rem;">
+                    PyEgar Engine V0.5 • Sistema de Dibujo Vectorial
+                </footer>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+        window.onload = () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                if(loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.remove(), 600);
+                }
+            }, 800); 
+        };
+    </script>
+</body>
+</html>
